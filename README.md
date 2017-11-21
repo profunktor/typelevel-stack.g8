@@ -1,17 +1,18 @@
-# Unofficial [Giter8][g8] template for the [Typelevel][typelevel] Stack ([Http4s][http4s] / [Doobie][doobie] / [Circe][circe] / [Cats Effect][cats-effect]) based on [Cats][cats] v1.0.0-RC1
+Unofficial [Giter8][g8] template for the [Typelevel][typelevel] Stack ([Http4s][http4s] / [Doobie][doobie] / [Circe][circe] / [Cats Effect][cats-effect]) based on [Cats][cats] v1.0.0-RC1
+==========================================================================================================================================================================================
 
 Typelevel Stack QuickStart
 --------------------------
 
 1. Install [sbt][sbt]
 2. `sbt new gvolpe/typelevel-stack.g8`
-3. `cd $organization$.$name;format="norm,word"$`
+3. `cd quickstart`
 4. `sbt run`
-5. `curl http://localhost:8080/user/$USERNAME`
+5. `curl http://localhost:8080/users/$USERNAME`
 
 Template license
 ----------------
-Written in <2017> by <Gabriel Volpe> <volpegabriel@gmail.com>
+Written in <2017> by [@gvolpe][gvolpe]
 
 To the extent possible under law, the author(s) have dedicated all copyright and related
 and neighboring rights to this template to the public domain worldwide.
@@ -26,3 +27,5 @@ This template is distributed without any warranty. See <http://creativecommons.o
 [cats]: https://typelevel.org/cats/
 
 [sbt]: http://www.scala-sbt.org/1.x/docs/Setup.html
+
+[gvolpe][https://github.com/gvolpe]
