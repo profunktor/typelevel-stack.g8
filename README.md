@@ -7,8 +7,10 @@ Typelevel Stack QuickStart
 1. Install [sbt][sbt]
 2. `sbt new gvolpe/typelevel-stack.g8`
 3. `cd quickstart`
-4. `sbt run`
-5. `curl http://localhost:8080/users/$USERNAME`
+4. Install [PostgreSQL][postgresql] and configure access for user `postgres` and password `postgres` (or change it on `UserDao`)
+5. Create database `users` and table `api_user` (see src/main/resources/users.sql).
+6. `sbt run`
+7. `curl http://localhost:8080/users/$USERNAME`
 
 Template license
 ----------------
@@ -27,5 +29,6 @@ This template is distributed without any warranty. See <http://creativecommons.o
 [cats]: https://typelevel.org/cats/
 
 [sbt]: http://www.scala-sbt.org/1.x/docs/Setup.html
+[postgresql]: https://www.postgresql.org/download/
 [gvolpe]: https://github.com/gvolpe
 

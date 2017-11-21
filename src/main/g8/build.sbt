@@ -1,10 +1,10 @@
-lazy val Http4sVersion     = "$http4s_version$"
-lazy val CirceVersion      = "$circe_version$"
-lazy val DoobieVersion     = "$doobie_version$"
-lazy val H2Version         = "$h2_version$"
-lazy val LogbackVersion    = "$logback_version$"
-lazy val ScalaTestVersion  = "$scalatest_version$"
-lazy val ScalaCheckVersion = "$scalacheck_version$"
+lazy val Http4sVersion     = "0.18.0-M5"
+lazy val CirceVersion      = "0.9.0-M2"
+lazy val DoobieVersion     = "0.5.0-M9"
+lazy val H2Version         = "1.4.196"
+lazy val LogbackVersion    = "1.2.3"
+lazy val ScalaTestVersion  = "3.0.3"
+lazy val ScalaCheckVersion = "1.13.4"
 
 lazy val root = (project in file("."))
   .settings(

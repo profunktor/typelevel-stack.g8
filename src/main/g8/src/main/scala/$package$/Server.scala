@@ -1,6 +1,7 @@
 package $package$
 
 import cats.effect.{Effect, IO}
+import $package$.http.UserHttpEndpoint
 import fs2.Stream
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.util.{ExitCode, StreamApp}
