@@ -12,6 +12,15 @@ lazy val root = (project in file("."))
     name := "$name$",
     version := "0.0.1-SNAPSHOT",
     scalaVersion := "$scala_version$",
+    scalacOptions := Seq(
+      "-deprecation",
+      "-encoding",
+      "UTF-8",
+      "-feature",
+      "-language:existentials",
+      "-language:higherKinds",
+      "-Ypartial-unification"
+    ),
     libraryDependencies ++= Seq(
       "org.http4s"      %% "http4s-blaze-server" % Http4sVersion,
       "org.http4s"      %% "http4s-circe"        % Http4sVersion,

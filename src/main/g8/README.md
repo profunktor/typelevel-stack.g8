@@ -9,8 +9,9 @@ Typelevel Stack QuickStart
 3. `cd $name;format="norm,word"$`
 4. Install [PostgreSQL][postgresql] and configure access for user `postgres` and password `postgres` (or change it on `UserDao`)
 5. Create database `users` and table `api_user` (see `src/main/resources/users.sql`).
-6. `sbt run`
-7. `curl http://localhost:8080/users/USERNAME`
+6. `sbt test` (optional)
+7. `sbt run`
+8. `curl http://localhost:8080/users/USERNAME`
 
 Template license
 ----------------
