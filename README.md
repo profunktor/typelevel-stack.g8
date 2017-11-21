@@ -13,7 +13,19 @@ Typelevel Stack QuickStart
 7. `sbt run`
 8. `curl http://localhost:8080/users/$USERNAME`
 
-Template license
+About Template
+--------------
+
+It contains the minimal code to get you started:
+
+- `UserDao`: Defines a method to find a user.
+  - `PostgresUserDao`: Implementation of the UserDao interface using Doobie and PostgreSQL.
+- `UserService`: Business logic on top of the UserDao.
+- `UserHttpEndpoint`: Defines the http endpoints of the REST API making use of the UserServce.
+- `http` package: Includes custom Circe Json Encoders for value classes.
+- `Server`: The main application that wires all the components and starts the web server.
+
+Template License
 ----------------
 Written in <2017> by [@gvolpe][gvolpe]
 
