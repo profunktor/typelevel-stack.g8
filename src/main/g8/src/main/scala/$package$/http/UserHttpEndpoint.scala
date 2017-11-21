@@ -2,7 +2,7 @@ package $package$.http
 
 import cats.effect._
 import cats.syntax.applicativeError._ // For `recoverWith`
-import cats.syntax.flatMap._ // For `>>=` (alias for `flatMap`)
+import cats.syntax.flatMap._ 
 import $package$.model._
 import $package$.service.UserService
 import io.circe.Json
@@ -21,7 +21,7 @@ class UserHttpEndpoint[F[_] : Effect](userService: UserService[F]) extends Http4
   val service: HttpService[F] = HttpService[F] {
     case GET -> Root / "users" / username =>
       val user = userService.findUser(new UserName(username))
-      user.>>=(u => Ok(u.asJson)).recoverWith {
+      user.flatMap(u => Ok(u.asJson)).recoverWith {
         case UserNotFound(msg) => NotFound(Json.fromString(msg))
       }
   }

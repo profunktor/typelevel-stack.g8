@@ -1,7 +1,8 @@
 package $package$.service
 
 import cats.effect.{Async, Sync}
-import cats.syntax.flatMap._ // For `>>=` (alias for `flatMap`)
+import cats.syntax.applicative._ // For `pure`
+import cats.syntax.flatMap._
 import $package$.persistence.UserDao
 import $package$.model._
 
@@ -13,10 +14,8 @@ class UserService[F[_] : Async](userDao: UserDao[F]) {
 
   def findUser(username: UserName): F[User] = {
     val ifEmpty = Sync[F].raiseError[User](UserNotFound(username.value))
-    userDao.find(username).>>= { maybeUser =>
-      maybeUser.fold(ifEmpty) { user =>
-        Sync[F].delay(user)
-      }
+    userDao.find(username) flatMap { maybeUser =>
+      maybeUser.fold(ifEmpty)(_.pure[F])
     }
   }
 
