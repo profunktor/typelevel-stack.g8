@@ -12,7 +12,7 @@ import doobie.util.transactor.Transactor
 object UserDao {
   def apply[F[_] : Async]: UserDao[F] = new PostgresUserDao[F](
     Transactor.fromDriverManager[F](
-      "org.postgresql.Driver", "jdbc:postgresql:users", "postgres", "postgres")
+      "org.postgresql.Driver", "jdbc:postgresql:users", "postgres", "postgres"
     )
   )
 }
