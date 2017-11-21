@@ -27,5 +27,5 @@ This template is distributed without any warranty. See <http://creativecommons.o
 [cats]: https://typelevel.org/cats/
 
 [sbt]: http://www.scala-sbt.org/1.x/docs/Setup.html
+[gvolpe]: https://github.com/gvolpe
 
-[gvolpe][https://github.com/gvolpe]
