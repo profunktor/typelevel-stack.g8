@@ -21,7 +21,7 @@ class PostgresUserDao[F[_] : Async](xa: Transactor[F]) extends UserDao[F] {
 
   override def find(username: UserName): F[Option[User] = {
     val userStatement: ConnectionIO[UserDTO] =
-      sql"SELECT u.id, u.username, u.email FROM user AS u WHERE u.username=${username.value}"
+      sql"SELECT u.id, u.username, u.email FROM user AS u WHERE u.username=\${username.value}"
         .query[UserDTO].unique
 
     // You migth have more than one query involving joins. In such a case a for-comprehention would be better

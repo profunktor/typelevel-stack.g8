@@ -7,6 +7,6 @@ object model {
 
   case class User(username: UserName, email: Email)
 
-  case class UserNotFound(username: String) extends Exception(s"User not found $username")
+  case class UserNotFound(username: String) extends Exception(s"User not found \$username")
 
 }
