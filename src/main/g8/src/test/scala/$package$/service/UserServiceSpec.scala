@@ -13,9 +13,9 @@ class UserServiceSpec extends FlatSpecLike with Matchers {
     }
   }
 
-  it should "fail retrieving an user" in {
-    intercept[UserNotFound] {
-      TestUserService.service.findUser(new UserName("xxx")).unsafeRunSync()
+  it should "fail retrieving an user" in IOAssertion {
+    TestUserService.service.findUser(new UserName("xxx")).attempt.map { result =>
+      result should be (Left(UserNotFound("xxx")))
     }
   }
 
