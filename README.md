@@ -1,4 +1,4 @@
-Unofficial [Giter8][g8] template for the [Typelevel][typelevel] Stack ([Http4s][http4s] / [Doobie][doobie] / [Circe][circe] / [Cats Effect][cats-effect]) based on [Cats][cats] v1.0.0-RC1
+Unofficial [Giter8][g8] template for the [Typelevel][typelevel] Stack ([Http4s][http4s] / [Doobie][doobie] / [Circe][circe] / [Cats Effect][cats-effect] / [Fs2][fs2]) based on [Cats][cats] v1.0.0-RC1
 ==========================================================================================================================================================================================
 
 Typelevel Stack QuickStart
@@ -40,6 +40,7 @@ This template is distributed without any warranty. See <http://creativecommons.o
 [circe]: https://circe.github.io/circe/
 [cats-effect]: https://github.com/typelevel/cats-effect
 [cats]: https://typelevel.org/cats/
+[fs2]: https://github.com/functional-streams-for-scala/fs2
 
 [sbt]: http://www.scala-sbt.org/1.x/docs/Setup.html
 [postgresql]: https://www.postgresql.org/download/
