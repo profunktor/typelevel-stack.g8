@@ -18,10 +18,9 @@ class UserHttpEndpointSpec extends UserHttpEndpointFixture with FlatSpecLike wit
     it should s"find the user with username: \$username" in IOAssertion {
       val request = Request[IO](uri = Uri(path = s"/users/\${username.value}"))
       httpService(request).value.map { task =>
-        task should not be None
         task.fold(fail("Empty response")) { response =>
-          response.status should be(expectedStatus)
-          response.body.asString should be(expectedBody)
+          response.status        should be (expectedStatus)
+          response.body.asString should be (expectedBody)
         }
       }
     }
