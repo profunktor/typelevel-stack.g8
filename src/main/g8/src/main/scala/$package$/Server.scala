@@ -14,7 +14,7 @@ class HttpServer[F[_] : Effect] extends StreamApp[F] {
   override def stream(args: List[String], requestShutdown: F[Unit]): Stream[F, ExitCode] =
     BlazeBuilder[F]
       .bindHttp() // Default address `localhost:8080`
-      .mountService(UserHttpEndpoint[F].service) // You can mount as many services as you want
+      .mountService(UserHttpEndpoint[F].service, "/users") // You can mount as many services as you want
       .serve
 
 }

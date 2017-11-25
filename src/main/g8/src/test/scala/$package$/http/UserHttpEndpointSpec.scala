@@ -1,27 +1,42 @@
 package $package$.http
 
 import cats.effect.IO
-import org.http4s.{HttpService, Request, Status, Uri}
+import io.circe.generic.auto._
+import org.http4s.{EntityEncoder, HttpService, Method, Request, Status, Uri}
+import org.http4s.circe._
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{FlatSpecLike, Matchers}
 import $package$.IOAssertion
 import $package$.TestUsers._
 import $package$.http.ResponseBodyUtils._
-import $package$.model.UserName
+import $package$.model.{CreateUser, UserName}
 import $package$.service.TestUserService
 
 class UserHttpEndpointSpec extends UserHttpEndpointFixture with FlatSpecLike with Matchers {
 
   val httpService: HttpService[IO] = new UserHttpEndpoint[IO](TestUserService.service).service
 
+  implicit def createUserEncoder: EntityEncoder[IO, CreateUser] = jsonEncoderOf[IO, CreateUser]
+
   forAll(examples) { (username, expectedStatus, expectedBody) =>
-    it should s"find the user with username: \$username" in IOAssertion {
-      val request = Request[IO](uri = Uri(path = s"/users/\${username.value}"))
+    it should s"find the user with username: \${username.value}" in IOAssertion {
+      val request = Request[IO](uri = Uri(path = s"/\${username.value}"))
       httpService(request).value.map { task =>
         task.fold(fail("Empty response")) { response =>
           response.status        should be (expectedStatus)
           response.body.asString should be (expectedBody)
         }
+      }
+    }
+  }
+
+  it should "Create a user" in IOAssertion {
+    for {
+      req   <- Request[IO](method = Method.POST).withBody(CreateUser("root", "root@unix.org"))
+      task  <- httpService(req).value
+    } yield {
+      task.fold(fail("Empty response")) { response =>
+        response.status should be (Status.Created)
       }
     }
   }

@@ -7,7 +7,7 @@ import $package$.persistence.UserDao
 
 object TestUserService {
 
-  val service: UserService[IO] = new UserService[IO](
+  val service: UserService[IO] = new DefaultUserService[IO](
     new UserDao[IO] {
       override def find(username: UserName): IO[Option[User]] = IO {
         users.find(_.username.value == username.value)
