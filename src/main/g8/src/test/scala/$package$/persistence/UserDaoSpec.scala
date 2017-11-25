@@ -11,6 +11,7 @@ import $package$.IOAssertion
 import $package$.TestUsers._
 import $package$.model.{Email, User, UserName}
 
+// The difference with the QueryDaoSpec is that here we test everything and not only a single query
 class UserDaoSpec extends FlatSpecLike with Matchers with BeforeAndAfterAll with H2Setup {
 
   private val h2Transactor: IO[H2Transactor[IO]] = 
