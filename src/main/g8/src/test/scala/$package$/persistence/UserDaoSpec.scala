@@ -12,21 +12,14 @@ import $package$.TestUsers._
 import $package$.model.{Email, User, UserName}
 
 // The difference with the QueryDaoSpec is that here we test everything and not only a single query
-class UserDaoSpec extends FlatSpecLike with Matchers with BeforeAndAfterAll with H2Setup {
+class UserDaoSpec extends H2Setup with FlatSpecLike with Matchers with BeforeAndAfterAll {
 
-  private val h2Transactor: IO[H2Transactor[IO]] = 
+  override val h2Transactor: IO[H2Transactor[IO]] = 
     H2Transactor[IO]("jdbc:h2:mem:users;MODE=PostgreSQL;DB_CLOSE_DELAY=-1", "sa", "")
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-
-    val program = for {
-      xa  <- h2Transactor
-      _   <- createUserTable.transact(xa)
-      _   <- insertData(xa)
-    } yield ()
-
-    program.unsafeRunSync()
+    setup.unsafeRunSync()
   }
 
   it should "find an user or not" in IOAssertion {
@@ -45,9 +38,9 @@ class UserDaoSpec extends FlatSpecLike with Matchers with BeforeAndAfterAll with
 
 trait H2Setup {
 
-  import cats.instances.list._
+  def h2Transactor: IO[H2Transactor[IO]]
 
-  val createUserTable: ConnectionIO[Int] =
+  private val createUserTable: ConnectionIO[Int] =
     sql"""
       CREATE TABLE api_user (
         id SERIAL PRIMARY KEY,
@@ -61,8 +54,16 @@ trait H2Setup {
       .update.withUniqueGeneratedKeys("id")
   }
 
-  def insertData(xa: Transactor[IO]): IO[List[Int]] = {
+  private def insertData(xa: Transactor[IO]): IO[List[Int]] = {
+    import cats.instances.list._ 
     Applicative[IO].traverse(users)(u => insertUserStatement(u).transact(xa))
   }
+
+  lazy val setup: IO[Unit] = 
+    for {
+      xa <- h2Transactor
+      _  <- createUserTable.transact(xa)
+      _  <- insertData(xa)
+    } yield ()
 
 }
