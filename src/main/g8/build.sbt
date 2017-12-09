@@ -1,6 +1,6 @@
-lazy val Http4sVersion     = "0.18.0-M5"
+lazy val Http4sVersion     = "0.18.0-M6"
 lazy val CirceVersion      = "0.9.0-M2"
-lazy val DoobieVersion     = "0.5.0-M9"
+lazy val DoobieVersion     = "0.5.0-M10"
 lazy val H2Version         = "1.4.196"
 lazy val LogbackVersion    = "1.2.3"
 lazy val ScalaTestVersion  = "3.0.3"

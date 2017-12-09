@@ -2,9 +2,9 @@ package $package$
 
 import cats.effect.{Effect, IO}
 import $package$.http.UserHttpEndpoint
-import fs2.Stream
+import fs2.StreamApp.ExitCode
+import fs2.{Stream, StreamApp}
 import org.http4s.server.blaze.BlazeBuilder
-import org.http4s.util.{ExitCode, StreamApp}
 
 // The only place where the Effect is defined. You could change it for `monix.eval.Task` for example.
 object Server extends HttpServer[IO]
