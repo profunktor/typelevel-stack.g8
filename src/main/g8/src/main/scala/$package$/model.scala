@@ -7,7 +7,9 @@ object model {
 
   case class User(username: UserName, email: Email)
 
-  case class UserNotFound(username: String) extends Exception(s"User not found \$username")
+  // Business errors
+  sealed trait ApiError extends Product with Serializable
+  case class UserNotFound(username: UserName) extends ApiError
 
   // Http model
   case class CreateUser(username: String, email: String)

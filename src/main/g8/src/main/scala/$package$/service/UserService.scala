@@ -1,36 +1,22 @@
 package $package$.service
 
+import cats.data.EitherT
 import cats.effect.Async
-import cats.syntax.applicative._ // For `pure`
-import cats.syntax.flatMap._
-import $package$.persistence.UserDao
+import cats.syntax.functor._
 import $package$.model._
+import $package$.repository.algebra.UserRepository
 
-object UserService {
-  def apply[F[_] : Async]: UserService[F] = new DefaultUserService[F](UserDao[F])
-}
+class UserService[F[_] : Async](userRepo: UserRepository[F]) {
 
-class DefaultUserService[F[_] : Async](userDao: UserDao[F]) extends UserService[F] {
-
-  override def findUser(username: UserName): F[User] = {
-    val ifEmpty = Async[F].raiseError[User](UserNotFound(username.value))
-    userDao.find(username) flatMap { maybeUser =>
-      maybeUser.fold(ifEmpty)(_.pure[F])
+  def findUser(username: UserName): F[ApiError Either User] =
+    userRepo.findUser(username) map { maybeUser =>
+      maybeUser.toRight[ApiError](UserNotFound(username))
     }
-  }
 
   // TODO: To be completed by final user :)
-  override def findAll: F[List[User]] = List.empty[User].pure[F]
-  override def addUser(user: User): F[Unit] = ().pure[F]
-  override def updateUser(user: User): F[Unit] = ().pure[F]
-  override def deleteUser(username: UserName): F[Unit] = ().pure[F]
-}
-
-trait UserService[F[_]] {
-  def findAll: F[List[User]]
-  def findUser(username: UserName): F[User]
-  def addUser(user: User): F[Unit]
-  def updateUser(user: User): F[Unit]
-  def deleteUser(username: UserName): F[Unit]
+  def findAll: F[ApiError Either List[User]] = EitherT.rightT(List.empty[User]).value
+  def addUser(user: User): F[ApiError Either Unit] = EitherT.rightT(()).value
+  def updateUser(user: User): F[ApiError Either Unit] = EitherT.rightT(()).value
+  def deleteUser(username: UserName): F[ApiError Either Unit] = EitherT.rightT(()).value
 }
 

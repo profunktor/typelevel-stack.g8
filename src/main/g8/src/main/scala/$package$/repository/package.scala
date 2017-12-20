@@ -2,7 +2,7 @@ package $package$
 
 import $package$.model._
 
-package object persistence {
+package object repository {
 
   type UserDTO = (Int, String, String)
 

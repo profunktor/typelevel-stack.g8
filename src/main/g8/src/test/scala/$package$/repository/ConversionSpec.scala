@@ -1,4 +1,4 @@
-package $package$.persistence
+package $package$.repository
 
 import org.scalacheck._
 import org.scalatest.{FlatSpecLike, Matchers}

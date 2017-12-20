@@ -1,8 +1,9 @@
-package $package$.persistence
+package $package$.repository
 
 import cats.effect.Async
-import cats.syntax.applicativeError._ // For `recoverWith`
+import cats.syntax.applicativeError._
 import $package$.model._
+import $package$.repository.algebra.UserRepository
 import doobie.free.connection.ConnectionIO
 import doobie.implicits._
 import doobie.util.invariant.UnexpectedEnd
@@ -10,20 +11,12 @@ import doobie.util.query.Query0
 import doobie.util.transactor.Transactor
 
 // It requires a created database `users` with db user `postgres` and password `postgres`. See `users.sql` file in resources.
-object UserDao {
-  def apply[F[_] : Async]: UserDao[F] = new PostgresUserDao[F](
-    Transactor.fromDriverManager[F](
-      "org.postgresql.Driver", "jdbc:postgresql:users", "postgres", "postgres"
-    )
-  )
-}
-
-class PostgresUserDao[F[_] : Async](xa: Transactor[F]) extends UserDao[F] {
+class PostgresUserRepository[F[_] : Async](xa: Transactor[F]) extends UserRepository[F] {
 
   def userQuery(username: UserName): Query0[UserDTO] =
     sql"SELECT * FROM api_user WHERE username=\${username.value}".query[UserDTO]
 
-  override def find(username: UserName): F[Option[User]] = {
+  override def findUser(username: UserName): F[Option[User]] = {
     val userStatement: ConnectionIO[UserDTO] = userQuery(username).unique
 
     // You might have more than one query involving joins. In such case a for-comprehension would be better
@@ -34,9 +27,5 @@ class PostgresUserDao[F[_] : Async](xa: Transactor[F]) extends UserDao[F] {
     }
   }
 
-}
-
-trait UserDao[F[_]] {
-  def find(username: UserName): F[Option[User]]
 }
 

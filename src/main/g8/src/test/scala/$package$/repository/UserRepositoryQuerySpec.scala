@@ -1,4 +1,4 @@
-package $package$.persistence
+package $package$.repository
 
 import cats.effect.IO
 import doobie.scalatest._
@@ -13,9 +13,9 @@ class UserDaoQuerySpec extends FunSuite with IOChecker {
     "org.postgresql.Driver", "jdbc:postgresql:users", "postgres", "postgres"
   )
 
-  private val userDao = new PostgresUserDao[IO](transactor)
+  private val userRepo = new PostgresUserRepository[IO](transactor)
 
   test("user by name query") {
-    check(userDao.userQuery(new UserName("gvolpe")))
+    check(userRepo.userQuery(new UserName("gvolpe")))
   }
 }

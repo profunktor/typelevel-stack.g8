@@ -1,4 +1,4 @@
-package $package$.persistence
+package $package$.repository
 
 import cats.Applicative
 import cats.effect.IO
@@ -25,9 +25,9 @@ class UserDaoSpec extends H2Setup with FlatSpecLike with Matchers with BeforeAnd
   it should "find an user or not" in IOAssertion {
     for {
       xa    <- h2Transactor
-      dao   = new PostgresUserDao[IO](xa)
-      user1 <- dao.find(users.head.username)
-      user2 <- dao.find(new UserName("random fella"))
+      repo  = new PostgresUserRepository[IO](xa)
+      user1 <- repo.findUser(users.head.username)
+      user2 <- repo.findUser(new UserName("random fella"))
     } yield {
       user1 should be (Some(users.head))
       user2 should be (None)

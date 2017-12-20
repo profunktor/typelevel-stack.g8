@@ -14,7 +14,11 @@ import $package$.service.TestUserService
 
 class UserHttpEndpointSpec extends UserHttpEndpointFixture with FlatSpecLike with Matchers {
 
-  val httpService: HttpService[IO] = new UserHttpEndpoint[IO](TestUserService.service).service
+  val httpService: HttpService[IO] =
+    new UserHttpEndpoint[IO](
+      TestUserService.service,
+      new HttpErrorHandler[IO]
+    ).service
 
   implicit def createUserEncoder: EntityEncoder[IO, CreateUser] = jsonEncoderOf[IO, CreateUser]
 
@@ -54,6 +58,6 @@ trait UserHttpEndpointFixture extends PropertyChecks {
     (user1.username, Status.Ok, s"""{"username":"\${user1.username.value}","email":"\${user1.email.value}"}"""),
     (user2.username, Status.Ok, s"""{"username":"\${user2.username.value}","email":"\${user2.email.value}"}"""),
     (user3.username, Status.Ok, s"""{"username":"\${user3.username.value}","email":"\${user3.email.value}"}"""),
-    (new UserName("xxx"), Status.NotFound, s""""xxx"""")
+    (new UserName("xxx"), Status.NotFound, "User not found xxx")
   )
 }
