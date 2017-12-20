@@ -18,11 +18,14 @@ About Template
 
 It contains the minimal code to get you started:
 
-- `UserDao`: Defines a method to find a user.
-  - `PostgresUserDao`: Implementation of the UserDao interface using Doobie and PostgreSQL.
-- `UserService`: Business logic on top of the UserDao.
-- `UserHttpEndpoint`: Defines the http endpoints of the REST API making use of the UserServce.
+- `UserRepository`: Defines a method to find a user without commiting to a Monad (kind of tagless-final).
+  - `PostgresUserRepository`: Implementation of the UserRepository interface using Doobie and PostgreSQL abstracting over the Effect `F[_]`.
+- `UserService`: Business logic on top of the UserRepository again abstracting over the Effect `F[_]`.
+- `UserHttpEndpoint`: Defines the http endpoints of the REST API making use of the UserService.
+- `HttpErrorHandler`: Mapping business errors to http responses in a single place.
 - `http` package: Includes custom Circe Json Encoders for value classes.
+- `validation` object: Includes fields validation using `cats.data.ValidatedNel`.
+- `Module`: Dependencies module.
 - `Server`: The main application that wires all the components and starts the web server.
 
 Template License
