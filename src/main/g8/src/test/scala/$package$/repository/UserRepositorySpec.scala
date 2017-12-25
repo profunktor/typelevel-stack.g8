@@ -1,6 +1,6 @@
 package $package$.repository
 
-import cats.Applicative
+import cats.Traverse
 import cats.effect.IO
 import doobie.free.connection.ConnectionIO
 import doobie.h2._
@@ -9,13 +9,13 @@ import doobie.util.transactor.Transactor
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
 import $package$.IOAssertion
 import $package$.TestUsers._
-import $package$.model.{Email, User, UserName}
+import $package$.model.{User, UserName}
 
-// The difference with the QueryDaoSpec is that here we test everything and not only a single query
-class UserDaoSpec extends H2Setup with FlatSpecLike with Matchers with BeforeAndAfterAll {
+// The difference with the QuerySpec is that here we test everything and not only a single query
+class UserRepositorySpec extends H2Setup with FlatSpecLike with Matchers with BeforeAndAfterAll {
 
   override val h2Transactor: IO[H2Transactor[IO]] = 
-    H2Transactor[IO]("jdbc:h2:mem:users;MODE=PostgreSQL;DB_CLOSE_DELAY=-1", "sa", "")
+    H2Transactor.newH2Transactor[IO]("jdbc:h2:mem:users;MODE=PostgreSQL;DB_CLOSE_DELAY=-1", "sa", "")
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -56,7 +56,7 @@ trait H2Setup {
 
   private def insertData(xa: Transactor[IO]): IO[List[Int]] = {
     import cats.instances.list._ 
-    Applicative[IO].traverse(users)(u => insertUserStatement(u).transact(xa))
+    Traverse[List].traverse(users)(u => insertUserStatement(u).transact(xa))
   }
 
   lazy val setup: IO[Unit] = 
