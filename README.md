@@ -1,4 +1,4 @@
-Unofficial [Giter8][g8] template for the [Typelevel][typelevel] Stack ([Http4s][http4s] / [Doobie][doobie] / [Circe][circe] / [Cats Effect][cats-effect] / [Fs2][fs2]) based on [Cats][cats] v1.0.0-RC2
+Unofficial [Giter8][g8] template for the [Typelevel][typelevel] Stack ([Http4s][http4s] / [Doobie][doobie] / [Circe][circe] / [Cats Effect][cats-effect] / [Fs2][fs2]) based on [Cats][cats] v1.0.1
 ==========================================================================================================================================================================================
 
 Typelevel Stack QuickStart
@@ -7,7 +7,7 @@ Typelevel Stack QuickStart
 1. Install [sbt][sbt]
 2. `sbt new gvolpe/typelevel-stack.g8`
 3. `cd quickstart`
-4. Install [PostgreSQL][postgresql] and configure access for user `postgres` and password `postgres` (or change it on `UserDao`)
+4. Install [PostgreSQL][postgresql] and configure access for user `postgres` and password `postgres` (or change it in `Module`)
 5. Create database `users` and table `api_user` (see `src/main/resources/users.sql`).
 6. `sbt test` (optional)
 7. `sbt run`
