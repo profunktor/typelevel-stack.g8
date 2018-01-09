@@ -8,7 +8,7 @@ Typelevel Stack QuickStart
 2. `sbt new gvolpe/typelevel-stack.g8`
 3. `cd quickstart`
 4. Install [PostgreSQL][postgresql] and configure access for user `postgres` and password `postgres` (or change it in `Module`)
-5. Create database `users` and table `api_user` (see `src/main/resources/users.sql`).
+5. Create database `users` and table `api_user` (see `src/main/resources/users.sql` or use `Flyway` as in the tests).
 6. `sbt test` (optional)
 7. `sbt run`
 8. `curl http://localhost:8080/users/$USERNAME`

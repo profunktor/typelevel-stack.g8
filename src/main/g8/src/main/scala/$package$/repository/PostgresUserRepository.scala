@@ -13,18 +13,24 @@ import doobie.util.transactor.Transactor
 // It requires a created database `users` with db user `postgres` and password `postgres`. See `users.sql` file in resources.
 class PostgresUserRepository[F[_] : Async](xa: Transactor[F]) extends UserRepository[F] {
 
-  def userQuery(username: UserName): Query0[UserDTO] =
-    sql"SELECT * FROM api_user WHERE username=\${username.value}".query[UserDTO]
-
   override def findUser(username: UserName): F[Option[User]] = {
-    val userStatement: ConnectionIO[UserDTO] = userQuery(username).unique
+    val statement: ConnectionIO[UserDTO] = UserStatement.findUser(username).unique 
 
     // You might have more than one query involving joins. In such case a for-comprehension would be better
-    val program: ConnectionIO[User] = userStatement.map(_.toUser)
+    val program: ConnectionIO[User] = statement.map(_.toUser)
 
     program.map(Option.apply).transact(xa).recoverWith {
       case UnexpectedEnd => Async[F].delay(None) // In case the user is not unique in your db. Check out Doobie's docs.
     }
+  }
+
+}
+
+object UserStatement {
+
+  def findUser(username: UserName): Query0[UserDTO] = {
+    sql"SELECT * FROM api_user WHERE username=\${username.value}"
+      .query[UserDTO]
   }
 
 }
