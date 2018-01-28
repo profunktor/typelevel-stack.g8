@@ -5,6 +5,8 @@ import fs2.StreamApp.ExitCode
 import fs2.{Scheduler, Stream, StreamApp}
 import org.http4s.server.blaze.BlazeBuilder
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 // The only place where the Effect is defined. You could change it for `monix.eval.Task` for example.
 object Server extends HttpServer[IO]
 
