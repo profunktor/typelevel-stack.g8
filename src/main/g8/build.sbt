@@ -1,6 +1,6 @@
 lazy val Http4sVersion     = "0.18.0"
 lazy val CirceVersion      = "0.9.1"
-lazy val DoobieVersion     = "0.5.0-RC2"
+lazy val DoobieVersion     = "0.5.0"
 lazy val H2Version         = "1.4.196"
 lazy val FlywayVersion     = "5.0.5"
 lazy val LogbackVersion    = "1.2.3"
