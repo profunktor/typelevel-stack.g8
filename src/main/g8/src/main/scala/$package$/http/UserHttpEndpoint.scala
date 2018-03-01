@@ -30,7 +30,7 @@ class UserHttpEndpoint[F[_] : Effect](userService: UserService[F],
     // Find user by username
     case GET -> Root / username =>
       for {
-        user     <- userService.findUser( new UserName(username))
+        user     <- userService.findUser(UserName(username))
         response <- user.fold(httpErrorHandler.handle, x => Ok(x.asJson))
       } yield response
 
@@ -50,7 +50,7 @@ class UserHttpEndpoint[F[_] : Effect](userService: UserService[F],
       req.decode[UpdateUser] { updateUser =>
         UserValidation.validateUpdateUser(updateUser).fold(
           errors  => BadRequest(errors.toList.asJson),
-          email   => userService.updateUser(User(new UserName(username), email)) flatMap { either =>
+          email   => userService.updateUser(User(UserName(username), email)) flatMap { either =>
             either.fold(httpErrorHandler.handle, _ => Ok())
           }
         )
@@ -59,7 +59,7 @@ class UserHttpEndpoint[F[_] : Effect](userService: UserService[F],
     // Delete a user
     case DELETE -> Root / username =>
       for {
-        result   <- userService.deleteUser(new UserName(username))
+        result   <- userService.deleteUser(UserName(username))
         response <- result.fold(httpErrorHandler.handle, _ => NoContent())
       } yield response
 

@@ -1,6 +1,7 @@
 package $package$.http
 
 import cats.effect.IO
+import cats.syntax.apply._
 import io.circe.generic.auto._
 import org.http4s.{EntityEncoder, HttpService, Method, Request, Status, Uri}
 import org.http4s.circe._
@@ -25,10 +26,10 @@ class UserHttpEndpointSpec extends UserHttpEndpointFixture with FlatSpecLike wit
   forAll(examples) { (username, expectedStatus, expectedBody) =>
     it should s"find the user with username: \${username.value}" in IOAssertion {
       val request = Request[IO](uri = Uri(path = s"/\${username.value}"))
-      httpService(request).value.map { task =>
-        task.fold(fail("Empty response")) { response =>
-          response.status        should be (expectedStatus)
-          response.body.asString should be (expectedBody)
+      httpService(request).value.flatMap { task =>
+        task.fold(IO(fail("Empty response")) *> IO.unit) { response =>
+          IO(response.status        should be (expectedStatus)) *>
+          IO(response.body.asString should be (expectedBody))
         }
       }
     }
@@ -38,11 +39,10 @@ class UserHttpEndpointSpec extends UserHttpEndpointFixture with FlatSpecLike wit
     for {
       req   <- Request[IO](method = Method.POST).withBody(CreateUser("root", "root@unix.org"))
       task  <- httpService(req).value
-    } yield {
-      task.fold(fail("Empty response")) { response =>
-        response.status should be (Status.Created)
-      }
-    }
+      _     <- task.fold(IO(fail("Empty response")) *> IO.unit) {response =>
+                 IO(response.status should be (Status.Created))
+               }
+    } yield ()
   }
 
 }
@@ -58,6 +58,6 @@ trait UserHttpEndpointFixture extends PropertyChecks {
     (user1.username, Status.Ok, s"""{"username":"\${user1.username.value}","email":"\${user1.email.value}"}"""),
     (user2.username, Status.Ok, s"""{"username":"\${user2.username.value}","email":"\${user2.email.value}"}"""),
     (user3.username, Status.Ok, s"""{"username":"\${user3.username.value}","email":"\${user3.email.value}"}"""),
-    (new UserName("xxx"), Status.NotFound, "User not found xxx")
+    (UserName("xxx"), Status.NotFound, "User not found xxx")
   )
 }

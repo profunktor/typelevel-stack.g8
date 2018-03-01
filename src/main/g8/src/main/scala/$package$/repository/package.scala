@@ -8,9 +8,9 @@ package object repository {
 
   implicit class UserConversions(dto: UserDTO) {
     def toUser: User = User(
-      username = new UserName(dto._2),
-      email = new Email(dto._3)
+      username = UserName(dto._2),
+      email = Email(dto._3)
     )
   }
-  
+
 }

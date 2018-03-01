@@ -5,9 +5,9 @@ import $package$.model.{Email, User, UserName}
 object TestUsers {
 
   val users = List(
-    User(new UserName("gvolpe"), new Email("gvolpe@github.com")),
-    User(new UserName("tpolecat"), new Email("tpolecat@github.com")),
-    User(new UserName("msabin"), new Email("msabin@github.com"))
+    User(UserName("gvolpe"), Email("gvolpe@github.com")),
+    User(UserName("tpolecat"), Email("tpolecat@github.com")),
+    User(UserName("msabin"), Email("msabin@github.com"))
   )
 
 }

@@ -2,8 +2,8 @@ package $package$
 
 object model {
 
-  class Email(val value: String) extends AnyVal
-  class UserName(val value: String) extends AnyVal
+  case class Email(value: String) extends AnyVal
+  case class UserName(value: String) extends AnyVal
 
   case class User(username: UserName, email: Email)
 
