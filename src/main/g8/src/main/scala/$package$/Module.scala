@@ -16,16 +16,12 @@ class Module[F[_] : Effect] {
       "org.postgresql.Driver", "jdbc:postgresql:users", "postgres", "postgres"
     )
 
-  private val userRepository: UserRepository[F] =
-    new PostgresUserRepository[F](xa)
+  private val userRepository: UserRepository[F] = new PostgresUserRepository[F](xa)
 
-  private val userService: UserService[F] =
-    new UserService[F](userRepository)
+  private val userService: UserService[F] = new UserService[F](userRepository)
 
-  private val httpErrorHandler: HttpErrorHandler[F] =
-    new HttpErrorHandler[F]
+  implicit val httpErrorHandler: HttpErrorHandler[F] = new HttpErrorHandler[F]
 
-  val userHttpEndpoint: HttpService[F] =
-    new UserHttpEndpoint[F](userService, httpErrorHandler).service
+  val userHttpEndpoint: HttpService[F] = new UserHttpEndpoint[F](userService).service
 
 }

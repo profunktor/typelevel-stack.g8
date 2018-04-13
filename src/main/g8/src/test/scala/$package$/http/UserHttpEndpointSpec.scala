@@ -15,11 +15,9 @@ import $package$.service.TestUserService
 
 class UserHttpEndpointSpec extends UserHttpEndpointFixture with FlatSpecLike with Matchers {
 
-  val httpService: HttpService[IO] =
-    new UserHttpEndpoint[IO](
-      TestUserService.service,
-      new HttpErrorHandler[IO]
-    ).service
+  implicit val errorHandler = new HttpErrorHandler[IO]
+
+  val httpService: HttpService[IO] = new UserHttpEndpoint[IO](TestUserService.service).service
 
   implicit def createUserEncoder: EntityEncoder[IO, CreateUser] = jsonEncoderOf[IO, CreateUser]
 

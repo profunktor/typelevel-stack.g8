@@ -1,4 +1,4 @@
-Unofficial [Giter8][g8] template for the [Typelevel][typelevel] Stack ([Http4s][http4s] / [Doobie][doobie] / [Circe][circe] / [Cats Effect][cats-effect] / [Fs2][fs2]) based on [Cats][cats] v1.0.1
+Unofficial [Giter8][g8] template for the [Typelevel][typelevel] Stack ([Http4s][http4s] / [Doobie][doobie] / [Circe][circe] / [Cats Effect][cats-effect] / [Fs2][fs2]) based on [Cats][cats] v1.x.x
 ==========================================================================================================================================================================================
 
 Typelevel Stack QuickStart

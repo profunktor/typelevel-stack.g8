@@ -13,8 +13,8 @@ import org.http4s._
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 
-class UserHttpEndpoint[F[_] : Effect](userService: UserService[F],
-                                      httpErrorHandler: HttpErrorHandler[F]) extends Http4sDsl[F] {
+class UserHttpEndpoint[F[_] : Effect](userService: UserService[F])
+                                     (implicit H: HttpErrorHandler[F]) extends Http4sDsl[F] {
 
   implicit def createUserDecoder[A : Decoder]: EntityDecoder[F, A] = jsonOf[F, A]
 
@@ -24,14 +24,14 @@ class UserHttpEndpoint[F[_] : Effect](userService: UserService[F],
     case GET -> Root =>
       for {
         users    <- userService.findAll
-        response <- users.fold(httpErrorHandler.handle, x => Ok(x.asJson))
+        response <- users.fold(H.handle, x => Ok(x.asJson))
       } yield response
 
     // Find user by username
     case GET -> Root / username =>
       for {
         user     <- userService.findUser(UserName(username))
-        response <- user.fold(httpErrorHandler.handle, x => Ok(x.asJson))
+        response <- user.fold(H.handle, x => Ok(x.asJson))
       } yield response
 
     // Create a user
@@ -40,7 +40,7 @@ class UserHttpEndpoint[F[_] : Effect](userService: UserService[F],
         UserValidation.validateCreateUser(createUser).fold(
           errors  => BadRequest(errors.toList.asJson),
           user    => userService.addUser(user) flatMap { either =>
-            either.fold(httpErrorHandler.handle, _ => Created())
+            either.fold(H.handle, _ => Created())
           }
         )
       }
@@ -51,7 +51,7 @@ class UserHttpEndpoint[F[_] : Effect](userService: UserService[F],
         UserValidation.validateUpdateUser(updateUser).fold(
           errors  => BadRequest(errors.toList.asJson),
           email   => userService.updateUser(User(UserName(username), email)) flatMap { either =>
-            either.fold(httpErrorHandler.handle, _ => Ok())
+            either.fold(H.handle, _ => Ok())
           }
         )
       }
@@ -60,7 +60,7 @@ class UserHttpEndpoint[F[_] : Effect](userService: UserService[F],
     case DELETE -> Root / username =>
       for {
         result   <- userService.deleteUser(UserName(username))
-        response <- result.fold(httpErrorHandler.handle, _ => NoContent())
+        response <- result.fold(H.handle, _ => NoContent())
       } yield response
 
   }
