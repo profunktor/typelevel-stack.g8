@@ -13,12 +13,12 @@ import org.http4s._
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 
-class UserHttpEndpoint[F[_] : Effect](userService: UserService[F])
-                                     (implicit H: HttpErrorHandler[F]) extends Http4sDsl[F] {
+class UserHttpRoutes[F[_]: Sync](userService: UserService[F])
+                                (implicit H: HttpErrorHandler[F]) extends Http4sDsl[F] {
 
   implicit def createUserDecoder[A : Decoder]: EntityDecoder[F, A] = jsonOf[F, A]
 
-  val service: HttpService[F] = HttpService[F] {
+  val routes: HttpRoutes[F] = HttpRoutes.of[F] {
 
     // Find all users
     case GET -> Root =>

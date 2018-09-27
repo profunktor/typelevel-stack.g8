@@ -1,25 +1,27 @@
 package $package$
 
-import cats.effect.{Effect, IO}
-import fs2.StreamApp.ExitCode
-import fs2.{Scheduler, Stream, StreamApp}
-import org.http4s.server.blaze.BlazeBuilder
+import cats.effect.{ConcurrentEffect, ContextShift, ExitCode, IO, IOApp}
+import cats.syntax.functor._
+import org.http4s.server.blaze.BlazeServerBuilder
 
-import scala.concurrent.ExecutionContext.Implicits.global
+// The only place where the Effect is defined. You could change it for `TaskApp` and `monix.eval.Task` for example.
+object Server extends IOApp {
 
-// The only place where the Effect is defined. You could change it for `monix.eval.Task` for example.
-object Server extends HttpServer[IO]
+  override def run(args: List[String]): IO[ExitCode] =
+    new HttpServer[IO].server.as(ExitCode.Success)
 
-class HttpServer[F[_] : Effect] extends StreamApp[F] {
+}
+
+class HttpServer[F[_]: ConcurrentEffect: ContextShift] {
 
   private val ctx = new Module[F]
 
-  override def stream(args: List[String], requestShutdown: F[Unit]): Stream[F, ExitCode] =
-    Scheduler(corePoolSize = 2) flatMap { implicit scheduler =>
-      BlazeBuilder[F]
-        .bindHttp() // Default address `localhost:8080`
-        .mountService(ctx.userHttpEndpoint, "/users") // You can mount as many services as you want
-        .serve
-    }
+  def server: F[Unit] =
+    BlazeServerBuilder[F]
+      .bindHttp(8080, "0.0.0.0")
+      .withHttpApp(ctx.httpApp)
+      .serve
+      .compile
+      .drain
 
 }

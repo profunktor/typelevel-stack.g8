@@ -3,7 +3,7 @@ package $package$.http
 import cats.effect.IO
 import cats.syntax.apply._
 import io.circe.generic.auto._
-import org.http4s.{EntityEncoder, HttpService, Method, Request, Status, Uri}
+import org.http4s.{EntityEncoder, HttpRoutes, Method, Request, Status, Uri}
 import org.http4s.circe._
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{FlatSpecLike, Matchers}
@@ -13,18 +13,18 @@ import $package$.http.ResponseBodyUtils._
 import $package$.model.{CreateUser, UserName}
 import $package$.service.TestUserService
 
-class UserHttpEndpointSpec extends UserHttpEndpointFixture with FlatSpecLike with Matchers {
+class UserHttpEndpointSpec extends UserHttpRoutesFixture with FlatSpecLike with Matchers {
 
   implicit val errorHandler = new HttpErrorHandler[IO]
 
-  val httpService: HttpService[IO] = new UserHttpEndpoint[IO](TestUserService.service).service
+  val httpRoutes: HttpRoutes[IO] = new UserHttpRoutes[IO](TestUserService.service).routes
 
   implicit def createUserEncoder: EntityEncoder[IO, CreateUser] = jsonEncoderOf[IO, CreateUser]
 
   forAll(examples) { (username, expectedStatus, expectedBody) =>
     it should s"find the user with username: \${username.value}" in IOAssertion {
       val request = Request[IO](uri = Uri(path = s"/\${username.value}"))
-      httpService(request).value.flatMap { task =>
+      httpRoutes(request).value.flatMap { task =>
         task.fold(IO(fail("Empty response")) *> IO.unit) { response =>
           IO(response.status        should be (expectedStatus)) *>
           IO(response.body.asString should be (expectedBody))
@@ -34,9 +34,9 @@ class UserHttpEndpointSpec extends UserHttpEndpointFixture with FlatSpecLike wit
   }
 
   it should "Create a user" in IOAssertion {
+    val req = Request[IO](method = Method.POST).withEntity(CreateUser("root", "root@unix.org"))
     for {
-      req   <- Request[IO](method = Method.POST).withBody(CreateUser("root", "root@unix.org"))
-      task  <- httpService(req).value
+      task  <- httpRoutes(req).value
       _     <- task.fold(IO(fail("Empty response")) *> IO.unit) {response =>
                  IO(response.status should be (Status.Created))
                }
@@ -45,7 +45,7 @@ class UserHttpEndpointSpec extends UserHttpEndpointFixture with FlatSpecLike wit
 
 }
 
-trait UserHttpEndpointFixture extends PropertyChecks {
+trait UserHttpRoutesFixture extends PropertyChecks {
 
   private val user1 = users.head
   private val user2 = users.tail.head
