@@ -1,20 +1,27 @@
 package $package$.repository
 
-import cats.effect.IO
-import doobie.h2.H2Transactor
-import doobie.scalatest.IOChecker
-import doobie.util.transactor.Transactor
+import cats.effect.{ContextShift, IO}
+//import doobie.h2.H2Transactor
+//import doobie.scalatest.IOChecker
+//import doobie.util.transactor.Transactor
 import org.flywaydb.core.Flyway
 import org.scalatest.{BeforeAndAfterAll, FunSuiteLike}
 
-trait RepositorySpec extends FunSuiteLike with IOChecker with BeforeAndAfterAll {
+import scala.concurrent.ExecutionContext
 
-  private val dbUrl   = "jdbc:h2:mem:users;MODE=PostgreSQL;DB_CLOSE_DELAY=-1"
-  private val dbUser  = "sa"
-  private val dbPass  = ""
+// FIXME: IOChecker is outdated
+//trait RepositorySpec extends FunSuiteLike with IOChecker with BeforeAndAfterAll {
+trait RepositorySpec extends FunSuiteLike with BeforeAndAfterAll {
 
-  override def transactor: Transactor[IO] =
-    H2Transactor.newH2Transactor[IO](dbUrl, dbUser, dbPass).unsafeRunSync()
+  val ec: ExecutionContext = ExecutionContext.global
+  implicit val cs: ContextShift[IO] = IO.contextShift(ec)
+
+  val dbUrl   = "jdbc:h2:mem:users;MODE=PostgreSQL;DB_CLOSE_DELAY=-1"
+  val dbUser  = "sa"
+  val dbPass  = ""
+
+  //override def transactor: Transactor[IO] =
+  //  H2Transactor.newH2Transactor[IO](dbUrl, dbUser, dbPass, ec, ec).unsafeRunSync()
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
