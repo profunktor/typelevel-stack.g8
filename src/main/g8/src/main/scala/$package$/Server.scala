@@ -1,6 +1,6 @@
 package $package$
 
-import cats.effect.{ConcurrentEffect, ContextShift, ExitCode, IO, IOApp}
+import cats.effect.{ConcurrentEffect, ContextShift, ExitCode, IO, IOApp, Timer}
 import cats.syntax.functor._
 import org.http4s.server.blaze.BlazeServerBuilder
 
@@ -12,7 +12,7 @@ object Server extends IOApp {
 
 }
 
-class HttpServer[F[_]: ConcurrentEffect: ContextShift] {
+class HttpServer[F[_]: ConcurrentEffect: ContextShift: Timer] {
 
   private val ctx = new Module[F]
 
