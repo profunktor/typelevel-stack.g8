@@ -1,12 +1,12 @@
-lazy val CatsEffectVersion = "1.0.0"
-lazy val Fs2Version        = "1.0.0-RC1"
-lazy val Http4sVersion     = "0.19.0-M2"
-lazy val CirceVersion      = "0.10.0"
-lazy val DoobieVersion     = "0.6.0-M3"
+lazy val CatsEffectVersion = "1.2.0"
+lazy val Fs2Version        = "1.0.3"
+lazy val Http4sVersion     = "0.20.0-RC1"
+lazy val CirceVersion      = "0.11.1"
+lazy val DoobieVersion     = "0.6.0"
 lazy val H2Version         = "1.4.196"
 lazy val FlywayVersion     = "5.0.5"
 lazy val LogbackVersion    = "1.2.3"
-lazy val ScalaTestVersion  = "3.0.5"
+lazy val ScalaTestVersion  = "3.0.7"
 lazy val ScalaCheckVersion = "1.13.4"
 
 lazy val root = (project in file("."))
@@ -39,12 +39,12 @@ lazy val root = (project in file("."))
       "org.tpolecat"    %% "doobie-core"         % DoobieVersion,
       "org.tpolecat"    %% "doobie-postgres"     % DoobieVersion,
       "org.tpolecat"    %% "doobie-h2"           % DoobieVersion,
-      "org.tpolecat"    %% "doobie-scalatest"    % DoobieVersion,
 
       "ch.qos.logback"  %  "logback-classic"     % LogbackVersion,
 
       "org.scalatest"   %% "scalatest"           % ScalaTestVersion  % Test,
-      "org.scalacheck"  %% "scalacheck"          % ScalaCheckVersion % Test
+      "org.scalacheck"  %% "scalacheck"          % ScalaCheckVersion % Test,
+      "org.tpolecat"    %% "doobie-scalatest"    % DoobieVersion % Test
     )
   )
 
